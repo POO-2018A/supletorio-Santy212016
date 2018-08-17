@@ -1,52 +1,29 @@
-
 package examensupletorio;
 
 import examensupletorio.Categorias.ClsAccesorio;
 import examensupletorio.Categorias.ClsComponente;
 import examensupletorio.Categorias.ClsComputador;
 import java.util.ArrayList;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class jfrRegistroProducto extends javax.swing.JFrame {
+    
+    ArrayList<Object> productos = new ArrayList<>();
     ClsControlador controlador = new ClsControlador();
-    static String fichero_Producto = "producto";
-    static ArrayList<Object> listaProductosArray = new ArrayList<>();
-    static DefaultListModel lista_productoList = new DefaultListModel();
     
     public jfrRegistroProducto() {
         initComponents();
         this.setTitle("Registro de Producto");
         this.setLocationRelativeTo(null);
-        txt_tipo.setEnabled(false);
-        //pnl_tipo.setVisible(true);
-        pnl_accesorio.setVisible(false);
-        pnl_componente.setVisible(false);
-        pnl_computador.setVisible(false);
         
-        if (controlador.extraerFichero(fichero_Producto).isEmpty()) {
-            controlador.crearFichero(fichero_Producto);
-        }
-        listaProductosArray = controlador.extraerFichero(fichero_Producto);
-        lst_ProductosRegistrados.setModel(lista_productoList);
-        llenarList();
-        
-        
+        productos = controlador.extraerObjetos("productos.dat");        
+        llenarTabla();
+    
+        pnl_contieneAtributos.setVisible(false);     
         
         
     }
-    
-    public void llenarList(){
-        if (listaProductosArray.size() > 0) {
-            lista_productoList.clear();
-            for (int i = 0; i < listaProductosArray.size(); i++) {
-                lista_productoList.addElement(listaProductosArray.get(i));
-            }
-        }
-        
-    }
-    
-    
     
     
     @SuppressWarnings("unchecked")
@@ -60,35 +37,32 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        cmb_categoria = new javax.swing.JComboBox<>();
-        txt_nombreP = new javax.swing.JTextField();
-        txt_precio = new javax.swing.JTextField();
-        txt_marca = new javax.swing.JTextField();
+        cmbCategoria = new javax.swing.JComboBox<>();
+        txtNombre = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
+        txtMarca = new javax.swing.JTextField();
         pnl_contieneAtributos = new javax.swing.JPanel();
-        pnl_computador = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        txt_almacenamientoCmptador = new javax.swing.JTextField();
-        txt_ramCmptador = new javax.swing.JTextField();
-        txt_procesadorCmptador = new javax.swing.JTextField();
-        pnl_accesorio = new javax.swing.JPanel();
-        jLabel10 = new javax.swing.JLabel();
-        txt_colorAcc = new javax.swing.JTextField();
-        pnl_tipo = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        txt_tipo = new javax.swing.JTextField();
+        txtTipo = new javax.swing.JTextField();
+        pnl_computador = new javax.swing.JPanel();
+        lblAlmacenamiento = new javax.swing.JLabel();
+        lblRam = new javax.swing.JLabel();
+        lblProcesador = new javax.swing.JLabel();
+        txtAlmacenamiento = new javax.swing.JTextField();
+        txtRam = new javax.swing.JTextField();
+        txtProcesador = new javax.swing.JTextField();
+        pnl_accesorio = new javax.swing.JPanel();
+        lblColor = new javax.swing.JLabel();
+        txtColor = new javax.swing.JTextField();
         pnl_componente = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
-        txt_capacidadCmpnt = new javax.swing.JTextField();
-        txt_velocidadCmpnt = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        lst_ProductosRegistrados = new javax.swing.JList<>();
-        jLabel6 = new javax.swing.JLabel();
-        btn_registrarProducto = new javax.swing.JButton();
-        btn_regresar = new javax.swing.JButton();
+        lblCapacidad = new javax.swing.JLabel();
+        lblVelocidad = new javax.swing.JLabel();
+        txtCapacidad = new javax.swing.JTextField();
+        txtVelocidad = new javax.swing.JTextField();
+        btnRegistrar = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbProductos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,12 +79,12 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
 
         jLabel4.setText("Marca:");
 
-        jLabel5.setText("Categoría;");
+        jLabel5.setText("Categoría:");
 
-        cmb_categoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--Seleccione--", "Accesorio", "Componente", "Computador" }));
-        cmb_categoria.addActionListener(new java.awt.event.ActionListener() {
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--SELECCIONE--", "COMPUTADOR", "ACCESORIO", "COMPONENTE" }));
+        cmbCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmb_categoriaActionPerformed(evt);
+                cmbCategoriaActionPerformed(evt);
             }
         });
 
@@ -132,10 +106,10 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
                             .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_precio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                            .addComponent(cmb_categoria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_marca, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_nombreP))))
+                            .addComponent(txtPrecio, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addComponent(cmbCategoria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMarca, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -146,39 +120,41 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(txt_nombreP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(txt_precio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(txt_marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtMarca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(cmb_categoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnl_contieneAtributos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel7.setText("Almacenamiento:");
+        jLabel12.setText("Tipo:");
 
-        jLabel8.setText("RAM:");
+        lblAlmacenamiento.setText("Almacenamiento:");
 
-        jLabel9.setText("Procesador:");
+        lblRam.setText("RAM:");
 
-        txt_almacenamientoCmptador.addKeyListener(new java.awt.event.KeyAdapter() {
+        lblProcesador.setText("Procesador:");
+
+        txtAlmacenamiento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_almacenamientoCmptadorKeyTyped(evt);
+                txtAlmacenamientoKeyTyped(evt);
             }
         });
 
-        txt_ramCmptador.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtRam.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_ramCmptadorKeyTyped(evt);
+                txtRamKeyTyped(evt);
             }
         });
 
@@ -189,35 +165,35 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             .addGroup(pnl_computadorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(lblAlmacenamiento)
+                    .addComponent(lblRam, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblProcesador, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
-                .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_ramCmptador)
-                    .addComponent(txt_procesadorCmptador)
-                    .addComponent(txt_almacenamientoCmptador))
-                .addGap(29, 29, 29))
+                .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(txtRam, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                    .addComponent(txtAlmacenamiento, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtProcesador))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_computadorLayout.setVerticalGroup(
             pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_computadorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(txt_almacenamientoCmptador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblAlmacenamiento)
+                    .addComponent(txtAlmacenamiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_ramCmptador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(txtRam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRam))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_computadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_procesadorCmptador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtProcesador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblProcesador))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jLabel10.setText("color:");
+        lblColor.setText("Color:");
 
         javax.swing.GroupLayout pnl_accesorioLayout = new javax.swing.GroupLayout(pnl_accesorio);
         pnl_accesorio.setLayout(pnl_accesorioLayout);
@@ -225,9 +201,9 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             pnl_accesorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_accesorioLayout.createSequentialGroup()
                 .addGap(65, 65, 65)
-                .addComponent(jLabel10)
-                .addGap(20, 20, 20)
-                .addComponent(txt_colorAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblColor)
+                .addGap(18, 18, 18)
+                .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_accesorioLayout.setVerticalGroup(
@@ -235,47 +211,24 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             .addGroup(pnl_accesorioLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_accesorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txt_colorAcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblColor)
+                    .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel12.setText("Tipo:");
+        lblCapacidad.setText("Capacidad:");
 
-        javax.swing.GroupLayout pnl_tipoLayout = new javax.swing.GroupLayout(pnl_tipo);
-        pnl_tipo.setLayout(pnl_tipoLayout);
-        pnl_tipoLayout.setHorizontalGroup(
-            pnl_tipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_tipoLayout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(jLabel12)
-                .addGap(20, 20, 20)
-                .addComponent(txt_tipo, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
-        pnl_tipoLayout.setVerticalGroup(
-            pnl_tipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_tipoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnl_tipoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(txt_tipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        lblVelocidad.setText("Velocidad:");
 
-        jLabel11.setText("Capacidad:");
-
-        jLabel13.setText("Velocidad:");
-
-        txt_capacidadCmpnt.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtCapacidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_capacidadCmpntKeyTyped(evt);
+                txtCapacidadKeyTyped(evt);
             }
         });
 
-        txt_velocidadCmpnt.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtVelocidad.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                txt_velocidadCmpntKeyTyped(evt);
+                txtVelocidadKeyTyped(evt);
             }
         });
 
@@ -286,12 +239,12 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             .addGroup(pnl_componenteLayout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addGroup(pnl_componenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(lblVelocidad, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblCapacidad, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addGap(18, 18, 18)
                 .addGroup(pnl_componenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_capacidadCmpnt)
-                    .addComponent(txt_velocidadCmpnt))
+                    .addComponent(txtCapacidad, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                    .addComponent(txtVelocidad))
                 .addGap(29, 29, 29))
         );
         pnl_componenteLayout.setVerticalGroup(
@@ -299,12 +252,12 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             .addGroup(pnl_componenteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_componenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(txt_capacidadCmpnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblCapacidad)
+                    .addComponent(txtCapacidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_componenteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txt_velocidadCmpnt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
+                    .addComponent(txtVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVelocidad))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -312,102 +265,112 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
         pnl_contieneAtributos.setLayout(pnl_contieneAtributosLayout);
         pnl_contieneAtributosLayout.setHorizontalGroup(
             pnl_contieneAtributosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnl_computador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnl_accesorio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnl_tipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnl_componente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(pnl_contieneAtributosLayout.createSequentialGroup()
+                .addGroup(pnl_contieneAtributosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnl_contieneAtributosLayout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel12)
+                        .addGap(39, 39, 39)
+                        .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnl_computador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnl_accesorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnl_contieneAtributosLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnl_componente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_contieneAtributosLayout.setVerticalGroup(
             pnl_contieneAtributosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnl_contieneAtributosLayout.createSequentialGroup()
-                .addComponent(pnl_tipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_contieneAtributosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnl_contieneAtributosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(1, 1, 1)
                 .addComponent(pnl_computador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnl_accesorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnl_componente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jScrollPane1.setViewportView(lst_ProductosRegistrados);
-
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setText("Lista de Productos:");
-
-        btn_registrarProducto.setText("Registrar Producto");
-        btn_registrarProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_registrarProductoActionPerformed(evt);
-            }
-        });
-
-        btn_regresar.setText("Regresar");
-        btn_regresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_regresarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(btn_registrarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btn_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(96, 96, 96))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1)
-                .addGap(18, 18, 18)
-                .addComponent(btn_registrarProducto)
-                .addGap(11, 11, 11)
-                .addComponent(btn_regresar)
-                .addContainerGap())
-        );
+
+        btnRegistrar.setText("Registrar Producto");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
+
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+
+        tbProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Precio", "Marca", "Categoria", "Atributos adicionales"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tbProductos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnl_contieneAtributos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addComponent(pnl_contieneAtributos, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 632, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnl_contieneAtributos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRegistrar)
+                            .addComponent(btnSalir)))
+                    .addComponent(pnl_contieneAtributos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -425,167 +388,148 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btn_regresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_regresarActionPerformed
-        jfrPrincipal i = new jfrPrincipal();
-        i.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btn_regresarActionPerformed
-
-    private void cmb_categoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_categoriaActionPerformed
+    private void cmbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoriaActionPerformed
         
-        if (cmb_categoria.getSelectedIndex() == 1) {
-            txt_tipo.setEnabled(true);
-            pnl_accesorio.setVisible(true);
-            pnl_componente.setVisible(false);
-            pnl_computador.setVisible(false);
-            
-        }else if (cmb_categoria.getSelectedIndex() == 2) {
-            txt_tipo.setEnabled(true);
-            pnl_accesorio.setVisible(false);
-            pnl_componente.setVisible(true);
-            pnl_computador.setVisible(false);
-            
-        }else if (cmb_categoria.getSelectedIndex() == 3) {
-            txt_tipo.setEnabled(true);
+        if (cmbCategoria.getSelectedIndex() == 1) {
+            System.out.println("COMPUTADOR");
+            txtTipo.setEnabled(true);
+            pnl_contieneAtributos.setVisible(true);
             pnl_accesorio.setVisible(false);
             pnl_componente.setVisible(false);
             pnl_computador.setVisible(true);
             
+        }else if (cmbCategoria.getSelectedIndex() == 2) {
+            System.out.println("ACCESORIO");
+            txtTipo.setEnabled(true);
+            pnl_contieneAtributos.setVisible(true);
+            pnl_accesorio.setVisible(true);
+            pnl_componente.setVisible(false);
+            pnl_computador.setVisible(false);
+            
+        }else if (cmbCategoria.getSelectedIndex() == 3) {
+            System.out.println("COMPONENTE");
+            txtTipo.setEnabled(true);
+            pnl_contieneAtributos.setVisible(true);
+            pnl_accesorio.setVisible(false);
+            pnl_componente.setVisible(true);
+            pnl_computador.setVisible(false);
+            
         }else {//bloquea todo
-            txt_tipo.setEnabled(false);
+            txtTipo.setEnabled(false);
             pnl_accesorio.setVisible(false);
             pnl_componente.setVisible(false);
             pnl_computador.setVisible(false);
         }
         
         
-    }//GEN-LAST:event_cmb_categoriaActionPerformed
+    }//GEN-LAST:event_cmbCategoriaActionPerformed
 
-    private void btn_registrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_registrarProductoActionPerformed
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        if(txtNombre.getText().equals("") || txtPrecio.getText().equals("") || txtPrecio.getText().equals("")){
+            JOptionPane.showMessageDialog(null,"Llene todos los campos","ERROR!!", JOptionPane.INFORMATION_MESSAGE);
+        }
         
-        if (txt_nombreP.getText().equals("") || txt_precio.getText().equals("") || txt_marca.getText().equals("") ||
-                cmb_categoria.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "Ingrese o Seleccione Datos", "Precaucion..!!", JOptionPane.WARNING_MESSAGE);
-        }else{
-            try {
-                accesorioComponenteComputador(cmb_categoria.getSelectedIndex());
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Precio Incorrecto / Campo Numérico", "Error..!!", JOptionPane.ERROR_MESSAGE);
-            }
+        if (cmbCategoria.getSelectedIndex() == 1) {
+            ArrayList<String> atributosAdicioneles = new ArrayList<>();
+            System.out.println("COMPUTADOR");
+            ClsComputador producto = new ClsComputador(txtNombre.getText(), Double.parseDouble(txtPrecio.getText()),txtMarca.getText(), (String) cmbCategoria.getSelectedItem(), txtTipo.getText(), Integer.parseInt(txtAlmacenamiento.getText()), Integer.parseInt(txtRam.getText()), txtProcesador.getText());
+            productos.add(producto);
+            System.out.println(producto.getTipo());
+            controlador.escribirObjeto("productos.dat", productos);
+            productos = controlador.extraerObjetos("productos.dat");
+            limpiar();
+            atributosAdicioneles.add("Tipo:"+producto.getTipo()+" Almacenamiento:"+producto.getAlmacenamiento()+" Ram:"+ producto.getRam()+ " Procesador"+producto.getProcesador());
+            Object prodcutoT [] = {producto.getNombre(), producto.getPrecio(),producto.getMarca(),producto.getCategoria(), atributosAdicioneles};
+            DefaultTableModel model = (DefaultTableModel) tbProductos.getModel();
+            model.addRow(prodcutoT);
             
+            
+        }else if (cmbCategoria.getSelectedIndex() == 2) {
+            ArrayList<String> atributosAdicioneles = new ArrayList<>();
+            System.out.println("ACCESORIO");
+            ClsAccesorio producto = new ClsAccesorio(txtNombre.getText(), Double.parseDouble(txtPrecio.getText()),txtMarca.getText(), (String) cmbCategoria.getSelectedItem(), txtTipo.getText(), txtColor.getText());
+            productos.add(producto);
+            controlador.escribirObjeto("productos.dat", productos);
+            productos = controlador.extraerObjetos("productos.dat");
+            limpiar();
+            atributosAdicioneles.add("Tipo:"+producto.getTipo()+" Color:"+producto.getColor());
+            Object prodcutoT [] = {producto.getNombre(), producto.getPrecio(),producto.getMarca(),producto.getCategoria(), atributosAdicioneles};
+            DefaultTableModel model = (DefaultTableModel) tbProductos.getModel();
+            model.addRow(prodcutoT);
+            
+            
+        }else if (cmbCategoria.getSelectedIndex() == 3) {
+            ArrayList<String> atributosAdicioneles = new ArrayList<>();
+            System.out.println("COMPONENTE");
+            ClsComponente producto = new ClsComponente(txtNombre.getText(), Double.parseDouble(txtPrecio.getText()),txtMarca.getText(), (String) cmbCategoria.getSelectedItem(), txtTipo.getText(), Integer.parseInt(txtCapacidad.getText()), Integer.parseInt(txtVelocidad.getText()));
+            productos.add(producto);
+            controlador.escribirObjeto("productos.dat", productos);
+            productos = controlador.extraerObjetos("productos.dat");
+            limpiar();
+            atributosAdicioneles.add("Tipo:"+producto.getTipo()+" Capacidad:"+producto.getCapacidad()+" Velocidad:"+ producto.getVelocidad());
+            Object prodcutoT [] = {producto.getNombre(), producto.getPrecio(),producto.getMarca(),producto.getCategoria(), atributosAdicioneles};
+            DefaultTableModel model = (DefaultTableModel) tbProductos.getModel();
+            model.addRow(prodcutoT);
+            atributosAdicioneles.remove(0);
+            
+        }else {//bloquea todo
+            JOptionPane.showMessageDialog(null,"Selecione una Categoria","ERROR!!",JOptionPane.ERROR_MESSAGE);
+            pnl_accesorio.setVisible(false);
+            pnl_componente.setVisible(false);
+            pnl_computador.setVisible(false);
         }
         
         
-    }//GEN-LAST:event_btn_registrarProductoActionPerformed
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
-    private void txt_almacenamientoCmptadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_almacenamientoCmptadorKeyTyped
+    private void txtAlmacenamientoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlmacenamientoKeyTyped
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();
         }
         int numero_caracteres = 10;
-        if (txt_almacenamientoCmptador.getText().length() >= numero_caracteres) {
+        if (txtAlmacenamiento.getText().length() >= numero_caracteres) {
             evt.consume();
         }
-    }//GEN-LAST:event_txt_almacenamientoCmptadorKeyTyped
+    }//GEN-LAST:event_txtAlmacenamientoKeyTyped
 
-    private void txt_ramCmptadorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_ramCmptadorKeyTyped
+    private void txtRamKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRamKeyTyped
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();//Solo permite numeros
         }
         int numero_caracteres = 10;
-        if (txt_ramCmptador.getText().length() >= numero_caracteres) {
+        if (txtRam.getText().length() >= numero_caracteres) {
             evt.consume();
         }
-    }//GEN-LAST:event_txt_ramCmptadorKeyTyped
+    }//GEN-LAST:event_txtRamKeyTyped
 
-    private void txt_capacidadCmpntKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_capacidadCmpntKeyTyped
+    private void txtCapacidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCapacidadKeyTyped
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();//Solo permite numeros
         }
         int numero_caracteres = 10;
-        if (txt_capacidadCmpnt.getText().length() >= numero_caracteres) {
+        if (txtCapacidad.getText().length() >= numero_caracteres) {
             evt.consume();
         }
-    }//GEN-LAST:event_txt_capacidadCmpntKeyTyped
+    }//GEN-LAST:event_txtCapacidadKeyTyped
 
-    private void txt_velocidadCmpntKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_velocidadCmpntKeyTyped
-        // TODO add your handling code here:
+    private void txtVelocidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtVelocidadKeyTyped
         char c = evt.getKeyChar();
         if (c < '0' || c > '9') {
             evt.consume();//Solo permite numeros
         }
         int numero_caracteres = 10;
-        if (txt_velocidadCmpnt.getText().length() >= numero_caracteres) {//Permite solo 10 digitos
+        if (txtVelocidad.getText().length() >= numero_caracteres) {//Permite solo 10 digitos
             evt.consume();
         }
-    }//GEN-LAST:event_txt_velocidadCmpntKeyTyped
+    }//GEN-LAST:event_txtVelocidadKeyTyped
 
-    public void accesorioComponenteComputador(int index){
-        ClsProducto p;
-        
-        if (index == 1) {
-            if (txt_tipo.getText().equals("") || txt_colorAcc.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese o Seleccione Datos", "Atención..!!", JOptionPane.WARNING_MESSAGE);
-            }else{
-                p = new ClsAccesorio(txt_nombreP.getText(), Double.parseDouble(txt_precio.getText()), txt_marca.getText(), txt_tipo.getText(), txt_colorAcc.getText());
-                listaProductosArray.add(p);
-                controlador.escribirFichero(fichero_Producto, listaProductosArray);
-                listaProductosArray = controlador.extraerFichero(fichero_Producto);
-                llenarList();
-                limpiar();
-            }
-            
-        }else if (index == 2) {
-            if (txt_tipo.getText().equals("") || txt_capacidadCmpnt.getText().equals("") || txt_velocidadCmpnt.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese o Seleccione Datos", "Atención..!!", JOptionPane.WARNING_MESSAGE);
-            }else{
-                p = new ClsComponente(txt_nombreP.getText(), Double.parseDouble(txt_precio.getText()), txt_marca.getText(), txt_tipo.getText(), Integer.parseInt(txt_capacidadCmpnt.getText()), Integer.parseInt(txt_velocidadCmpnt.getText()));
-                listaProductosArray.add(p);
-                controlador.escribirFichero(fichero_Producto, listaProductosArray);
-                listaProductosArray = controlador.extraerFichero(fichero_Producto);
-                llenarList();
-                limpiar();
-            }
-            
-        }else if (index == 3) {
-            if (txt_tipo.getText().equals("") || txt_almacenamientoCmptador.getText().equals("") || txt_ramCmptador.getText().equals("") || txt_procesadorCmptador.getText().equals("")) {
-                JOptionPane.showMessageDialog(null, "Ingrese o Seleccione Datos", "Atención..!!", JOptionPane.WARNING_MESSAGE);
-            } else {
-                p = new ClsComputador(txt_nombreP.getText(), Double.parseDouble(txt_precio.getText()), txt_marca.getText(), txt_tipo.getText(), Integer.parseInt(txt_almacenamientoCmptador.getText()), Integer.parseInt(txt_ramCmptador.getText()), txt_procesadorCmptador.getText());
-                listaProductosArray.add(p);
-                controlador.escribirFichero(fichero_Producto, listaProductosArray);
-                listaProductosArray = controlador.extraerFichero(fichero_Producto);
-                llenarList();
-                limpiar();
-            }
-            
-        }
-        
-        
-    }
-    
-    public void limpiar(){
-        txt_nombreP.setText(null);
-        txt_precio.setText(null);
-        txt_marca.setText(null);
-        cmb_categoria.setSelectedIndex(0);
-        txt_tipo.setText(null);
-        txt_almacenamientoCmptador.setText(null);
-        txt_ramCmptador.setText(null);
-        txt_procesadorCmptador.setText(null);
-        txt_colorAcc.setText(null);
-        txt_capacidadCmpnt.setText(null);
-        txt_velocidadCmpnt.setText(null);
-        
-    }
-    
-    
-    
-    
-    
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnSalirActionPerformed
+  
     /**
      * @param args the command line arguments
      */
@@ -623,43 +567,69 @@ public class jfrRegistroProducto extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    public void llenarTabla(){
+        
+        if(productos.size() > 0){
+            ClsProducto producto =  new ClsProducto();
+            DefaultTableModel model = (DefaultTableModel) tbProductos.getModel();
+            for(int i = 0; i < productos.size(); i ++){
+                producto = (ClsProducto) productos.get(i);
+                Object productoT [] = {producto.getNombre(), producto.getPrecio(), producto.getMarca(), producto.getCategoria()};
+                model.insertRow(i, productoT);
+            }
+        }
+    }
+    
+    public void limpiar(){
+        txtNombre.setText(null);
+        txtPrecio.setText(null);
+        txtMarca.setText(null);
+        cmbCategoria.setSelectedIndex(0);
+        txtTipo.setText(null);
+        txtAlmacenamiento.setText(null);
+        txtRam.setText(null);
+        txtProcesador.setText(null);
+        txtColor.setText(null);
+        txtCapacidad.setText(null);
+        txtVelocidad.setText(null);
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_registrarProducto;
-    private javax.swing.JButton btn_regresar;
-    private javax.swing.JComboBox<String> cmb_categoria;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> cmbCategoria;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JList<String> lst_ProductosRegistrados;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblAlmacenamiento;
+    private javax.swing.JLabel lblCapacidad;
+    private javax.swing.JLabel lblColor;
+    private javax.swing.JLabel lblProcesador;
+    private javax.swing.JLabel lblRam;
+    private javax.swing.JLabel lblVelocidad;
     private javax.swing.JPanel pnl_accesorio;
     private javax.swing.JPanel pnl_componente;
     private javax.swing.JPanel pnl_computador;
     private javax.swing.JPanel pnl_contieneAtributos;
-    private javax.swing.JPanel pnl_tipo;
-    private javax.swing.JTextField txt_almacenamientoCmptador;
-    private javax.swing.JTextField txt_capacidadCmpnt;
-    private javax.swing.JTextField txt_colorAcc;
-    private javax.swing.JTextField txt_marca;
-    private javax.swing.JTextField txt_nombreP;
-    private javax.swing.JTextField txt_precio;
-    private javax.swing.JTextField txt_procesadorCmptador;
-    private javax.swing.JTextField txt_ramCmptador;
-    private javax.swing.JTextField txt_tipo;
-    private javax.swing.JTextField txt_velocidadCmpnt;
+    private javax.swing.JTable tbProductos;
+    private javax.swing.JTextField txtAlmacenamiento;
+    private javax.swing.JTextField txtCapacidad;
+    private javax.swing.JTextField txtColor;
+    private javax.swing.JTextField txtMarca;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecio;
+    private javax.swing.JTextField txtProcesador;
+    private javax.swing.JTextField txtRam;
+    private javax.swing.JTextField txtTipo;
+    private javax.swing.JTextField txtVelocidad;
     // End of variables declaration//GEN-END:variables
 }

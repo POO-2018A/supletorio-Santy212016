@@ -14,16 +14,26 @@ import java.io.Serializable;
  */
 public class ClsComponente extends ClsProducto implements Serializable{
     
+    private String tipo;
     private int capacidad;
     private int velocidad;
     
     public ClsComponente() {
     }
 
-    public ClsComponente(String nombre, double precio, String marca, String tipo, int capacidad, int velocidad) {
-        super(nombre, precio, marca, tipo);
-        this.capacidad = capacidad;
+   public ClsComponente(String nombre, double precio, String marca, String categoria, String tipo, int capacidad, int velocidad) {
+        super(nombre, precio, marca, categoria);
+        this.tipo = tipo;
         this.velocidad = velocidad;
+        
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
     
     

@@ -14,6 +14,7 @@ import java.io.Serializable;
  */
 public class ClsComputador extends ClsProducto implements Serializable{
     
+    private String tipo;
     private int almacenamiento;
     private int ram;
     private String procesador;
@@ -21,17 +22,22 @@ public class ClsComputador extends ClsProducto implements Serializable{
     public ClsComputador() {
     }
 
-    public ClsComputador(int almacenamiento, int ram, String procesador) {
+
+  public ClsComputador(String nombre, double precio, String marca, String categoria, String tipo, int almacenamiento, int ram, String procesador) {
+        super(nombre, precio, marca, categoria);
+        this.tipo = tipo;
         this.almacenamiento = almacenamiento;
         this.ram = ram;
         this.procesador = procesador;
+        
     }
 
-    public ClsComputador(String nombre, double precio, String marca, String tipo, int almacenamiento, int ram, String procesador) {
-        super(nombre, precio, marca, tipo);
-        this.almacenamiento = almacenamiento;
-        this.ram = ram;
-        this.procesador = procesador;
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     

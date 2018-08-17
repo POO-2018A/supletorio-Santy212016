@@ -16,33 +16,35 @@ public class ClsProducto implements Serializable{
     private String nombre;
     private double precio;
     private String marca;
-    private String tipo;
+    private String categoria;
     
     public ClsProducto() {
     }
 
-    public ClsProducto(String nombre, double precio, String marca, String tipo) {
+    public ClsProducto(String nombre, double precio, String marca, String categoria) {
         this.nombre = nombre;
         this.precio = precio;
         this.marca = marca;
-        this.tipo = tipo;
+        this.categoria = categoria;
     }
 
     @Override
     public String toString() {
         return nombre;
     }
-    
-    
-    
-    
-    public String getTipo() {
-        return tipo;
+
+    public String getCategoria() {
+        return categoria;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
+    
+    
+    
+    
+  
 
     public String getNombre() {
         return nombre;
